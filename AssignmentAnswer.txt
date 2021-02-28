@@ -1,0 +1,204 @@
+Q1. Add a maven dependency and its related repository URL.
+
+ <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>5.3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>2.4</version>
+            <type>maven-plugin</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.7</version>
+            <type>maven-plugin</type>
+        </dependency>
+</dependencies>
+
+##################################################################################################
+
+Q2. Add a new repository in the pom.xml and use its dependencies.
+
+
+    <repositories>
+        <repository>
+            <id>org.source.repo</id>
+            <url>http://maven.orgName.com/maven2/</url>
+        </repository>
+    </repositories>
+
+##################################################################################################
+
+
+Q3 Using JAR plugin, make changes in the pom.xml to make the jar executable.
+            Using java -jar JAR_NAME, the output should be printed as "Hello World"
+
+
+
+    com.bootcamp/PrintHelloWorld
+    -------------------------------------------------------------------------------
+    package com.bootcamp;
+
+    public class PrintHelloWorld {
+        public static void main(String [] args){
+            System.out.print("Rajdeep says @");
+            System.out.println("*****Hello World****");
+            System.out.println("*****Bye****");
+        }
+    }
+    --------------------------------------------------------------------------------
+          
+    pom.xml File content
+    ---------------------------------------------------------------------------------
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.bootcamp.PrintHelloWorld</mainClass>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    ----------------------------------------------------------------------------------
+    $mvn Clean install
+    $java -cp target/First_Maven_Project-1.0-SNAPSHOT.jar com.bootcamp/PrintHelloWorld
+
+    Rajdeep says @*****Hello World****
+    *****Bye****
+    ----------------------------------------------------------------------------------
+
+##################################################################################################
+
+   
+Q4. Differentiate between the different dependency scopes: compile, runtime, test, provided
+               using different dependencies being defined in your pom.xml.
+
+</dependencies> 
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.4</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+</dependencies>
+
+
+
+##################################################################################################
+
+Q5. Create a multi-module project. Run package command at the top level to make jar of every module.
+
+    parent(Mutli-Model Project folder).
+    ------------------------------------------------------------------------
+    parent pom.xml file
+    -------------------------------------------------------------------------
+    <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>LeftChild</module>
+        <module>RightChild</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+</project>
+    ------------------------------------------------------------------------------
+
+    LeftChild pom.xml file
+    ------------------------------------------------------------------------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>LeftChild</artifactId>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+</project>
+    -----------------------------------------------------------------------------
+    RightChild pom.xml File
+    -----------------------------------------------------------------------------
+
+    <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>RightChild</artifactId>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+</project>
+
+########################################################################################
